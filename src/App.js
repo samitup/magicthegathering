@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import { Grid } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Rules from './components/Rules'
 import Filter from './components/Filter'
@@ -35,26 +35,20 @@ const App = () => {
     }, 750)
   }
 
+
   const getRulesText = () => {
     var tempRules;
-    let rawFile = new XMLHttpRequest();
+    return axios
+      .get('https://evening-wildwood-55510.herokuapp.com/https://media.wizards.com/2021/downloads/MagicCompRules%2020210419.txt')
+      .then(response => {
+        setRules(response.data)
+        tempRules = response.data
+        parseText(tempRules)
+      })
 
-    rawFile.open("GET", "https://evening-wildwood-55510.herokuapp.com/https://media.wizards.com/2021/downloads/MagicCompRules%2020210419.txt", false);
-    rawFile.onreadystatechange = () => {
-      if (rawFile.readyState === 4) {
-        if (rawFile.status === 200 || rawFile.status === 0) {
-          var allText = rawFile.responseText;
-          tempRules = allText;
-          setRules(allText);
-        }
-      }
-    };
-
-    rawFile.send(null);
-    parseText(tempRules)
   }
-
   useEffect(getRulesText, []);
+
 
   const parseText = (tempRules) => {
     var titles = tempRules.match(/^\d{3}\.+([^0-9]).*?$/gms)
@@ -115,22 +109,40 @@ const App = () => {
   return (
     <div>
       <Container id="container" fixed>
-        <Typography><strong><h1>Magic: The Gathering rules</h1></strong></Typography>
-        <Typography><strong><h2>Table of content</h2></strong></Typography>
+        <strong><h1>Magic: The Gathering rules</h1></strong>
+        <strong><h2>Table of content</h2></strong>
         <Grid container>
           <Grid item xs={6}>
             <List className="list">
               {arrayOfTitles.map(titleObject => (
-                <ListItem key={titleObject.id}><ListItemLink href="#" onClick={() => onSelect(titleObject)}><ListItemText>{titleObject.title}</ListItemText></ListItemLink></ListItem>
+                <ListItem key={titleObject.id}>
+                  <ListItemLink href="#" onClick={() => onSelect(titleObject)}>
+                    <ListItemText>
+                      {titleObject.title}
+                    </ListItemText>
+                  </ListItemLink>
+                </ListItem>
               ))}
             </List>
           </Grid>
           <Grid item xs={6}>
-            <Filter filter={setFilterField} changeFilter={handleFilterChange} />
-            <Title title={title} filterField={filterField} previousTitle={previousTitle} setTitle={setTitle}></Title>
+            <Filter filter={setFilterField}
+              changeFilter={handleFilterChange}>
+            </Filter>
+            <Title title={title}
+              filterField={filterField}
+              previousTitle={previousTitle}
+              setTitle={setTitle}>
+            </Title>
             <div>{isSelected === true ? <p></p> : <i><strong>Click titles or search with keywords</strong></i>}</div>
             <List className="list">
-              {filterField !== '' ? <Rules arrayOfRules={arrayOfRules} filter={filterField} selected={setIsSelected}></Rules> : <RulesByTitle ruleToShow={ruleToShow}></RulesByTitle>}
+              {filterField !== '' ?
+                <Rules arrayOfRules={arrayOfRules}
+                  filter={filterField}
+                  setIsSelected={setIsSelected}>
+                </Rules> :
+                <RulesByTitle ruleToShow={ruleToShow}>
+                </RulesByTitle>}
             </List>
           </Grid>
         </Grid>
