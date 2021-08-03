@@ -1,3 +1,10 @@
+See program on Heroku: https://evening-wildwood-55510.herokuapp.com/
+If cloning the repo, remember to clone magicthegathering-backend  repo also, it contains CORS proxy.
+This program parses rules of 'Magic: the gathering' on a webpage.
+You can find original rules.txt on: https://media.wizards.com/2021/downloads/MagicCompRules%2020210419.txt
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
