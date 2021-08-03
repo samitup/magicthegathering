@@ -1,5 +1,5 @@
 See program on Heroku: https://evening-wildwood-55510.herokuapp.com/
-This program parses rules of 'Magic: the gathering' on a webpage.
+This program parses rules of 'Magic: the gathering' to the webpage.
 You can find original rules.txt on: https://media.wizards.com/2021/downloads/MagicCompRules%2020210419.txt
 
 
